@@ -1,0 +1,94 @@
+﻿@model FrontEndComplaintApplication.Models.Complaint
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var userObjectJson = ViewBag.UserObjectJson;
+    var demands = (IList<Demand>)Model.Demands;
+
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="ComplaintText" class="control-label"></label>
+                    <input asp-for="ComplaintText" class="form-control" />
+                    <span asp-validation-for="ComplaintText" class="text-danger"></span>
+                </div>
+
+                <input asp-for="FileName" class="form-control" value="potato" hidden />
+
+                <div class="mb-3">
+                    <label asp-for="File" class="control-label"></label>
+                    <input type="file" asp-for="File" class="form-control" />
+                    <span asp-validation-for="File" class="text-danger"></span>
+                </div>
+
+                <input asp-for="Language" class="form-control" value="english" hidden />
+
+                <div class="mb-3 form-check">
+                    <input class="form-check-input" asp-for="IsApproved" value="False" disabled hidden />
+                </div>
+
+                <input asp-for="UserId" class="form-control" value="@ViewBag.UserObjectJson" disabled  />
+
+                <h3>Demand Details</h3>
+                <div id="demandContainer">
+                    @for (int i = 0; i < Model.Demands.Count; i++)
+                    {
+                        <div class="mb-3">
+                            <label asp-for="@Model.Demands[i].DemandText" class="control-label">Demand Text</label>
+                            <input asp-for="@Model.Demands[i].DemandText" class="form-control" />
+                            <span asp-validation-for="@Model.Demands[i].DemandText" class="text-danger"></span>
+                        </div>
+                    }
+                </div>
+
+                <button type="button" class="btn btn-secondary" id="addDemandBtn">Add Demand</button>
+
+               
+
+
+                <div id="demandTemplate" style="display:none;">
+                    <div class="mb-3">
+                        <label class="control-label">Demand Text</label>
+                        <input class="form-control" />
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary w-100">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row mt-3 justify-content-center">
+        <div class="col-md-6 text-center">
+            <a asp-action="Index" class="btn btn-secondary">Back Home</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        var demandIndex = @Model.Demands.Count;
+        $("#addDemandBtn").click(function () {
+            var demandTemplate = `<div class="mb-3">
+                                                <label class="control-label">Demand Text</label>
+                                                <input name="Demands[${demandIndex}].DemandText" class="form-control" />
+                                       <span class="text-danger"></span>
+                                            </div>`;
+            $("#demandContainer").append(demandTemplate);
+            demandIndex++;
+        });
+    </script>
+                }

@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Complaint_Application</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Complaint_Application.styles.css" asp-append-version="true" />
+</head>
+<body>
+    @{
+        var userObjectJson = ViewBag.UserObjectJson;
+        // var isLoggedIn = !string.IsNullOrEmpty(userObjectJson);
+    }
+
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Auth" asp-action="Index">Complaint_Application</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-flex justify-content-between w-100">
+                    <div>
+                        @if (userObjectJson != null)
+                        {
+                            <div class="d-flex">
+                                <ul class="navbar-nav">
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Index">All Complaints</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                    <div>
+                        <ul class="navbar-nav justify-content-end">
+                            @if (userObjectJson == null)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark btn btn-secondary mx-2 text-white" asp-area="" asp-controller="Auth" asp-action="Login">Login</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark btn btn-primary text-white" asp-area="" asp-controller="Auth" asp-action="Register">Register</a>
+                                </li>
+                            }
+                            @if (userObjectJson != null)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-white btn btn-danger" asp-area="" asp-controller="Auth" asp-action="Logout">Logout</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    @*   <footer class="border-top footer text-muted">
+    <div class="container">
+    &copy; 2023 - Complaint_Application - <a asp-area="" asp-controller="Home" asp-action="Privacy">@ViewBag.UserObjectJson</a>
+    </div>
+    </footer>
+    *@
+    <div class="container">
+        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+            <p class="col-md-4 mb-0 text-muted">© 2022 Company, Inc</p>
+
+            <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+            </a>
+
+            <ul class="nav col-md-4 justify-content-end">
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+            </ul>
+        </footer>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Check if user data exists in sessionStorage
+        var storedUserData = JSON.parse(sessionStorage.getItem('userData'));
+
+        // If user data exists, hide Login and Register links
+        if (storedUserData) {
+            document.getElementById('loginLink').style.display = 'none';
+            document.getElementById('registerLink').style.display = 'none';
+        }
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

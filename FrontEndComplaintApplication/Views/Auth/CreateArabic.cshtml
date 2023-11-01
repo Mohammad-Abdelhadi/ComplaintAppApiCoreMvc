@@ -1,0 +1,55 @@
+﻿@model FrontEndComplaintApplication.Models.Complaint
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var userObjectJson = ViewBag.UserObjectJson;
+}
+
+<div class="container mt-5" dir="rtl">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="post" enctype="multipart/form-data" asp-action="CreateArabic">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label class="form-label">نص الشكوى</label>
+                    <input asp-for="ComplaintText" class="form-control" />
+                    <span asp-validation-for="ComplaintText" class="text-danger"></span>
+                </div>
+
+                <input asp-for="FileName" class="form-control" value="potato" hidden />
+
+                <div class="mb-3">
+                    <label class="form-label">الملفات</label>
+                    <input type="file" asp-for="File" class="form-control" />
+                    <span asp-validation-for="File" class="text-danger"></span>
+                </div>
+
+                <input asp-for="Language" class="form-control" value="arabic"  hidden/>
+
+                <div class="mb-3 form-check">
+                    <input class="form-check-input" asp-for="IsApproved" value="False" disabled hidden />
+                </div>
+
+                <input asp-for="UserId" class="form-control" value="@ViewBag.UserObjectJson" disabled hidden />
+
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary w-100">تقديم</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row mt-3 justify-content-center">
+        <div class="col-md-6 text-center">
+            <a asp-action="Index" class="btn btn-secondary">الرجوع للخلف</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
