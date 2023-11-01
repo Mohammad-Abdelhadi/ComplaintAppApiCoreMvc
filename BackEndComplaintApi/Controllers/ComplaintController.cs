@@ -27,7 +27,7 @@ namespace BackEndComplaintApi.Controllers
         [HttpGet("GetComplaints/{Id}")]
         public IActionResult GetComplaints(int Id)
         {
-            // in the db , Users Table I got 2 admins With (Id 1 And 8) 
+            // in the db , Users Table I got 2 admins With (Id 1 ) 
             if (Id == 1)
             {
                 var complaints = _context.Complaints.ToList();
