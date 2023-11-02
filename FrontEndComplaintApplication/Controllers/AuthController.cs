@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -329,6 +330,31 @@ namespace FrontEndComplaintApplication.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> ViewComplaint(int id)
+        {
+            var userObjectJson = HttpContext.Session.GetString("UserObject");
+            var userObject = JsonConvert.DeserializeObject<User>(userObjectJson);
+
+            HttpResponseMessage response = await _httpClient.GetAsync($"api/complaint/GetSingleComplaint/{id}");
+
+            if (userObjectJson != null && response.IsSuccessStatusCode)
+            {
+                string responseString = await response.Content.ReadAsStringAsync();
+                var complaint = JsonConvert.DeserializeObject<Complaint>(responseString);
+            
+                    ViewBag.UserObjectJson = userObjectJson;
+                    return View(complaint);
+            }
+            
+            else
+            {
+                // Handle the case where userObjectJson is null or API call fails
+                return RedirectToAction("Login"); // Redirect to a login page or display an error message
+            }
+        }
+
+
         public async Task<IActionResult> AcceptView(int id, bool isApproved)
         {
             try
@@ -337,7 +363,7 @@ namespace FrontEndComplaintApplication.Controllers
                 var json = JsonConvert.SerializeObject(data);
                 var jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = await _httpClient.PutAsync($"api/Complaint/EditComplaint/{id}?isApproved={isApproved}", jsonContent);
+                HttpResponseMessage response = await _httpClient.PutAsync($"api/Complaint/EditComplaint/{id}?isApproved={true}", jsonContent);
 
 
                 if (response.IsSuccessStatusCode)

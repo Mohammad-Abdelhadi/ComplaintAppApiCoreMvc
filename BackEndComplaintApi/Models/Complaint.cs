@@ -23,7 +23,7 @@ namespace BackEndComplaintApi.Models
 
         [Required(ErrorMessage = "User ID is required.")]
         public int UserId { get; set; } // Foreign key to link with the User table
-        public List<Demand> Demands { get; set; }
+        public List<Demand>? Demands { get; set; }
 
     }
 }

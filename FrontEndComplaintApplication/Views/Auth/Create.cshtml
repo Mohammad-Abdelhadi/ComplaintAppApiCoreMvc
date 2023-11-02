@@ -34,9 +34,9 @@
                     <input class="form-check-input" asp-for="IsApproved" value="False" disabled hidden />
                 </div>
 
-                <input asp-for="UserId" class="form-control" value="@ViewBag.UserObjectJson" disabled  />
+                <input asp-for="UserId" class="form-control" value="@ViewBag.UserObjectJson" disabled hidden  />
 
-                <h3>Demand Details</h3>
+                <h3 style="display:none;">Demand Details</h3>
                 <div id="demandContainer">
                     @for (int i = 0; i < Model.Demands.Count; i++)
                     {
@@ -48,7 +48,7 @@
                     }
                 </div>
 
-                <button type="button" class="btn btn-secondary" id="addDemandBtn">Add Demand</button>
+                <button type="button "  class="btn btn-secondary" id="addDemandBtn">Add Demand</button>
 
                
 

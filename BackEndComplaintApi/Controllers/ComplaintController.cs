@@ -27,17 +27,15 @@ namespace BackEndComplaintApi.Controllers
         [HttpGet("GetComplaints/{Id}")]
         public IActionResult GetComplaints(int Id)
         {
-            // in the db , Users Table I got 2 admins With (Id 1 ) 
-            if (Id == 1)
+            if (Id == 1) // Assuming user with ID 1 is the admin
             {
                 var userComplaints = _context.Complaints
-                              .Include(c => c.Demands) // Include demands related to complaints
-                              .Where(c => c.UserId == Id)
-                              .ToList();
+                               .Include(c => c.Demands) // Include demands related to complaints
+                               .ToList();
                 return Ok(userComplaints);
             }
-            return Unauthorized( new { message = "You Dont Have Premmesion ." });
-            
+
+            return Unauthorized(new { message = "You don't have permission." });
         }
 
 
@@ -61,11 +59,13 @@ namespace BackEndComplaintApi.Controllers
 
 
 
-        // Get Single Complaint
+        // Get Single Complaint with Demands
         [HttpGet("GetSingleComplaint/{id}")]
         public IActionResult GetSingleComplaint(int id)
         {
-            var complaint = _context.Complaints.Find(id);
+            var complaint = _context.Complaints
+                                   .Include(c => c.Demands) // Eager loading demands
+                                   .FirstOrDefault(c => c.Id == id);
 
             if (complaint == null)
             {
@@ -74,6 +74,7 @@ namespace BackEndComplaintApi.Controllers
 
             return Ok(complaint);
         }
+
         [HttpPut("EditComplaint/{id}")]
         public async Task<IActionResult> AcceptView(int id, bool isApproved)
         {

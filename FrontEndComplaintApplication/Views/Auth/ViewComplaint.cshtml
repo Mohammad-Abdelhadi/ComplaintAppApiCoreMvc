@@ -1,0 +1,71 @@
+﻿@model FrontEndComplaintApplication.Models.Complaint
+
+@{
+    ViewData["Title"] = "View Complaint";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var userObjectJson = ViewBag.UserObjectJson;
+
+}
+
+<div class="container mt-4">
+    <div class="card border-muted">
+        <h5 class="card-header bg-primary text-white text-center">Complaint Details</h5>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-3 text-muted font-weight-bold">ID:</div>
+                <div class="col-md-9">@Model.Id</div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-md-3 text-muted font-weight-bold">Complaint Text:</div>
+                <div class="col-md-9">@Model.ComplaintText</div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-md-3 text-muted font-weight-bold">File Name:</div>
+                <div class="col-md-9">@Model.FileName</div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-md-3 text-muted font-weight-bold">Language:</div>
+                <div class="col-md-9">@Model.Language</div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-md-3 text-muted font-weight-bold">Is Approved:</div>
+                <div class="col-md-9">@Model.IsApproved</div>
+            </div>
+            <hr />
+            <div class="row mb-3">
+                <div class="col-md-3 text-muted font-weight-bold">User ID:</div>
+                <div class="col-md-9">@Model.UserId</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <h5 class="card-header bg-secondary text-white text-center">Demands</h5>
+        <div class="card-body">
+            @if (Model.Demands != null && Model.Demands.Any())
+            {
+                foreach (var demand in Model.Demands)
+                {
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <p class="card-text font-weight-bold">Demand Text:</p>
+                            <p class="card-text">@demand.DemandText</p>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-muted">No demands associated with this complaint.</p>
+            }
+        </div>
+    </div>
+
+    <div class="card-footer border-0 bg-light text-right mt-4">
+        <a asp-action="Index" class="btn btn-secondary ml-2 w-100">Back to List</a>
+    </div>
+</div>

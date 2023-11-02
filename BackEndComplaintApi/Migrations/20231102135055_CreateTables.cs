@@ -4,7 +4,7 @@
 
 namespace BackEndComplaintApi.Migrations
 {
-    public partial class createtables : Migration
+    public partial class CreateTables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -61,6 +61,16 @@ namespace BackEndComplaintApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Email", "Password", "PhoneNumber", "Role", "Username" },
+                values: new object[] { 1, "admin@admin.com", "AQAAAAEAACcQAAAAEL8U89xUCOuGL6ks1jsAK7LzI4vFNdeitQ04XqjXMfnMuJe8WSuRNqxfaBCowh3Xkg==", "0788888888", "admin", "admin" });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Email", "Password", "PhoneNumber", "Role", "Username" },
+                values: new object[] { 2, "user@user.com", "AQAAAAEAACcQAAAAEC43xzUUpJUSfoLNYv3MKpfDH28KbCRBnHbHLcec1BIw2E73Vio6E7uNSQuiNAU7nA==", "0799999999", "user", "user" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Demands_ComplaintId",

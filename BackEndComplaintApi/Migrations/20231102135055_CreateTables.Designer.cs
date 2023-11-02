@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BackEndComplaintApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231101101158_createtables")]
-    partial class createtables
+    [Migration("20231102135055_CreateTables")]
+    partial class CreateTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -110,6 +110,26 @@ namespace BackEndComplaintApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Email = "admin@admin.com",
+                            Password = "AQAAAAEAACcQAAAAEL8U89xUCOuGL6ks1jsAK7LzI4vFNdeitQ04XqjXMfnMuJe8WSuRNqxfaBCowh3Xkg==",
+                            PhoneNumber = "0788888888",
+                            Role = "admin",
+                            Username = "admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Email = "user@user.com",
+                            Password = "AQAAAAEAACcQAAAAEC43xzUUpJUSfoLNYv3MKpfDH28KbCRBnHbHLcec1BIw2E73Vio6E7uNSQuiNAU7nA==",
+                            PhoneNumber = "0799999999",
+                            Role = "user",
+                            Username = "user"
+                        });
                 });
 
             modelBuilder.Entity("BackEndComplaintApi.Models.Demand", b =>
