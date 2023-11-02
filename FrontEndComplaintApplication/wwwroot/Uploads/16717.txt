@@ -1,0 +1,26 @@
+Students db = new Students();
+Students student = db.Students.Find(id)
+return View(student);
+
+Used to get data from API
+asp-validation-summary -> to preview all the error validation
+to preview the input validation error : 
+<span asp-validation-for="Name" class="text-danger"> </span>
+
+domain : 
+dev-aybv2w1mbakr11uh.us.auth0.com
+
+_____
+client id :
+2oQnNWo9mUSapdZ6y9zM7xJqeNTGhJb7
+
+__
+      "applicationUrl": "https://localhost:7078;http://localhost:5043",
+
+
+allowed callback urls
+https://localhost:7078/
+logout urls
+https://localhost:7078
+//
+Account/Login

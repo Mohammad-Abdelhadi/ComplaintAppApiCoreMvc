@@ -30,8 +30,11 @@ namespace BackEndComplaintApi.Controllers
             // in the db , Users Table I got 2 admins With (Id 1 ) 
             if (Id == 1)
             {
-                var complaints = _context.Complaints.ToList();
-                return Ok(complaints);
+                var userComplaints = _context.Complaints
+                              .Include(c => c.Demands) // Include demands related to complaints
+                              .Where(c => c.UserId == Id)
+                              .ToList();
+                return Ok(userComplaints);
             }
             return Unauthorized( new { message = "You Dont Have Premmesion ." });
             
@@ -72,7 +75,7 @@ namespace BackEndComplaintApi.Controllers
             return Ok(complaint);
         }
         [HttpPut("EditComplaint/{id}")]
-        public async Task<IActionResult> EditComplaint(int id, [FromBody] Complaint updatedComplaint)
+        public async Task<IActionResult> AcceptView(int id, bool isApproved)
         {
             var existingComplaint = await _context.Complaints.FindAsync(id);
             if (existingComplaint == null)
@@ -86,14 +89,14 @@ namespace BackEndComplaintApi.Controllers
                 return BadRequest("Complaint is already approved and cannot be edited.");
             }
 
-            // Update properties of the existing complaint with values from updatedComplaint
-            existingComplaint.IsApproved = updatedComplaint.IsApproved;
+            // Update the IsApproved property of the existing complaint
+            existingComplaint.IsApproved = isApproved;
 
             // Save changes to the database asynchronously
             _context.Update(existingComplaint);
             await _context.SaveChangesAsync();
 
-            return Ok(updatedComplaint);
+            return Ok(); // Return a success response without the complaint object
         }
 
 

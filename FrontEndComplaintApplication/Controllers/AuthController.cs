@@ -194,7 +194,7 @@ namespace FrontEndComplaintApplication.Controllers
                     string uniqueId = Guid.NewGuid().ToString().Substring(0, 5);
                     // complaint -> user id , complaintid .
                     // demand -> id complaintid 
-                    
+
                     // Save the file
                     string fileName = uniqueId + Path.GetExtension(complaint.File.FileName);
                     string filePath = Path.Combine(uploadDirectory, fileName);
@@ -328,69 +328,59 @@ namespace FrontEndComplaintApplication.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("Index");
         }
-        //[HttpGet("{id}")]
-        //public async Task<IActionResult> AcceptView(int id)
-        //{
-        //    try
-        //    {
-        //        // Fetch the existing complaint from the API based on the provided id
-        //        HttpResponseMessage response = await _httpClient.GetAsync($"api/Complaint/GetSingleComplaint/{id}");
 
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            // Deserialize the response content to Complaint object
-        //            var jsonContent = await response.Content.ReadAsStringAsync();
-        //            var existingComplaint = JsonConvert.DeserializeObject<Complaint>(jsonContent);
-
-        //            // Pass the existing complaint to the view
-        //            return View(existingComplaint);
-        //        }
-        //        else
-        //        {
-        //            // Handle the response status code or content for failure
-        //            return View();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Handle the exception, e.g., log it, show an error message to the user, etc.
-        //        return View();
-        //    }
-        //}
-
-        [HttpGet]
-        public IActionResult AcceptView()
-        {
-            return View();
-        }
-        [HttpPost]
-        public async Task<IActionResult> AcceptView(int id, Complaint updatedComplaint)
+        public async Task<IActionResult> AcceptView(int id, bool isApproved)
         {
             try
             {
- 
-                var json = JsonConvert.SerializeObject(updatedComplaint);
+                var data = new { IsApproved = isApproved };
+                var json = JsonConvert.SerializeObject(data);
                 var jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = await _httpClient.PutAsync($"api/Complaint/EditComplaint/{id}", jsonContent);
+                HttpResponseMessage response = await _httpClient.PutAsync($"api/Complaint/EditComplaint/{id}?isApproved={isApproved}", jsonContent);
+
 
                 if (response.IsSuccessStatusCode)
                 {
-                    // Handle the response if needed
-                    return RedirectToAction("Index"); // Or any other action result for success
+                    return RedirectToAction("Index");
                 }
                 else
                 {
-                    // Handle the response status code or content for failure
-                    return View("Index"); // Or any other action result for error
+                    return BadRequest(new { success = false, error = "Failed to update complaint status." });
                 }
             }
             catch (Exception ex)
             {
-                // Handle the exception, e.g., log it, show an error message to the user, etc.
-                return View("Index"); // Or any other action result for error
+                return BadRequest(new { success = false, error = ex.Message });
             }
         }
+
+        public async Task<IActionResult> Reject(int id, bool isApproved)
+        {
+            try
+            {
+                var data = new { IsApproved = isApproved };
+                var json = JsonConvert.SerializeObject(data);
+                var jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await _httpClient.PutAsync($"api/Complaint/EditComplaint/{id}?isApproved={isApproved}", jsonContent);
+
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return BadRequest(new { success = false, error = "Failed to update complaint status." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, error = ex.Message });
+            }
+        }
+
 
     }
 }

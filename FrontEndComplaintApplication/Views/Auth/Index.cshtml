@@ -91,6 +91,7 @@
                         <th>Image</th>
                         <th>Status</th>
                         <th>Actions</th> <!-- Additional column for admin actions -->
+                        <th>Actions</th> <!-- Additional column for admin actions -->
                     </tr>
                 </thead>
                 <tbody>
@@ -110,19 +111,19 @@
                                 </a>
                             </td>
                             <td>
-                                @if (complaint.Demands != null)
-                                {
-                                    foreach (var demand in complaint.Demands)
+                                    @foreach (var demand in complaint.Demands)
                                     {
+                                        @demand.Id <br />
                                         @demand.DemandText <br />
+                                        @demand.ComplaintId <br />
+                                        <hr />
                                     }
-                                }
                             </td>
                             <td>@complaint.IsApproved</td>
                             @if (@complaint.IsApproved == false)
                             {
                                 <td>
-                                    <a asp-action="AcceptView" asp-controller="Auth" asp-route-id="@complaint.Id" class="btn btn-success"> Accept</a>
+                                    <a asp-action="AcceptView" asp-route-id="@complaint.Id" class="btn btn-success"> Accept</a>
                                     <a asp-action="Reject" asp-route-id="@complaint.Id" class="btn btn-danger" onclick="return confirm('Are you sure you want to reject this complaint?')"> Reject</a>
                                 </td>
                             }
