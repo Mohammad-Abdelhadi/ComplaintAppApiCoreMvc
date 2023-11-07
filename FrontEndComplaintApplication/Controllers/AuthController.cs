@@ -90,7 +90,7 @@ namespace FrontEndComplaintApplication.Controllers
 
             return View();
         }
-        public IActionResult Create()
+        public  IActionResult Create()
         {
             var userObjectJson = HttpContext.Session.GetString("UserObject");
 
@@ -162,7 +162,6 @@ namespace FrontEndComplaintApplication.Controllers
             }
         }
 
-
         public IActionResult CreateArabic()
         {
             var userObjectJson = HttpContext.Session.GetString("UserObject");
@@ -173,8 +172,15 @@ namespace FrontEndComplaintApplication.Controllers
                 ViewBag.UserObjectJson = user.Id; // Assuming UserId is the property you want to pass to the view
             }
 
-            return View();
+            // Initialize Demands property with an empty list
+            var complaint = new Complaint
+            {
+                Demands = new List<Demand>()
+            };
+
+            return View(complaint);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> CreateArabic(Complaint complaint)
@@ -182,65 +188,51 @@ namespace FrontEndComplaintApplication.Controllers
             var userObjectJson = HttpContext.Session.GetString("UserObject");
             var userObject = JsonConvert.DeserializeObject<User>(userObjectJson);
 
-            if (complaint.File != null && complaint.File.Length > 0 && ModelState.IsValid)
+            try
             {
-                try
+                // Save image to a specific directory within the project
+                string uploadDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Uploads");
+                if (!Directory.Exists(uploadDirectory))
                 {
-                    // Save image to a specific directory within the project
-                    string uploadDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Uploads");
-                    if (!Directory.Exists(uploadDirectory))
-                    {
-                        Directory.CreateDirectory(uploadDirectory);
-                    }
-                    string uniqueId = Guid.NewGuid().ToString().Substring(0, 5);
-                    // complaint -> user id , complaintid .
-                    // demand -> id complaintid 
-
-                    // Save the file
-                    string fileName = uniqueId + Path.GetExtension(complaint.File.FileName);
-                    string filePath = Path.Combine(uploadDirectory, fileName);
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await complaint.File.CopyToAsync(fileStream);
-                    }
-
-                    // Set the FileName property of the model to the file name
-                    complaint.FileName = fileName;
-                    complaint.UserId = userObject.Id;
-
-                    // Serialize the complaint object to JSON
-                    var jsonContent = new StringContent(JsonConvert.SerializeObject(complaint), Encoding.UTF8, "application/json");
-
-                    // Send a POST request 
-                    HttpResponseMessage response = await _httpClient.PostAsync("api/Complaint/sendcomplaint", jsonContent);
-
-                    // Handle the API response
-                    if (response.IsSuccessStatusCode)
-                    {
-                        // Extract data from response if necessary
-                        // var responseData = await response.Content.ReadAsStringAsync();
-                        // Pass necessary data to the view
-                        return RedirectToAction("Index"); // Replace "SuccessView" with your actual success view name
-                    }
-                    else
-                    {
-                        // Handle API error and return appropriate view
-                        return View("ErrorView"); // Replace "ErrorView" with your actual error view name
-                    }
+                    Directory.CreateDirectory(uploadDirectory);
                 }
-                catch (Exception ex)
+                string uniqueId = Guid.NewGuid().ToString().Substring(0, 5);
+
+                // Save the file
+                string fileName = uniqueId + Path.GetExtension(complaint.File.FileName);
+                string filePath = Path.Combine(uploadDirectory, fileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    // Handle exceptions here
-                    return BadRequest($"Failed to create. Error: {ex.Message}");
+                    await complaint.File.CopyToAsync(fileStream);
+                }
+
+                // Set the FileName property of the model to the file name
+                complaint.FileName = fileName;
+                complaint.UserId = userObject.Id;
+
+                // Serialize the complaint object to JSON
+                var jsonContent = new StringContent(JsonConvert.SerializeObject(complaint), Encoding.UTF8, "application/json");
+
+                // Send a POST request 
+                HttpResponseMessage response = await _httpClient.PostAsync("api/Complaint/sendcomplaint", jsonContent);
+
+                // Handle the API response
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("Index"); // Replace "SuccessView" with your actual success view name
+                }
+                else
+                {
+                    // Handle API error and return appropriate view
+                    return View("Index"); // Replace "ErrorView" with your actual error view name
                 }
             }
-            else
+            catch (Exception ex)
             {
-                // Handle invalid model state or missing file
-                return BadRequest("Invalid model state or file is missing.");
+                // Handle exceptions here
+                return BadRequest($"Failed to create. Error: {ex.Message}");
             }
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Register(User req)

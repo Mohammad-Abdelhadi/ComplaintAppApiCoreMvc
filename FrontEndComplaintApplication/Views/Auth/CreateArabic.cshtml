@@ -4,16 +4,18 @@
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var userObjectJson = ViewBag.UserObjectJson;
+    var demands = (IList<Demand>)Model.Demands;
+
 }
 
 <div class="container mt-5" dir="rtl">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <form method="post" enctype="multipart/form-data" asp-action="CreateArabic">
+            <form method="post" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                 <div class="mb-3">
-                    <label class="form-label">نص الشكوى</label>
+                    <label asp-for="ComplaintText" class="control-label">نص الشكوى</label>
                     <input asp-for="ComplaintText" class="form-control" />
                     <span asp-validation-for="ComplaintText" class="text-danger"></span>
                 </div>
@@ -21,21 +23,40 @@
                 <input asp-for="FileName" class="form-control" value="potato" hidden />
 
                 <div class="mb-3">
-                    <label class="form-label">الملفات</label>
+                    <label asp-for="File" class="control-label"> ارفق ملف</label>
                     <input type="file" asp-for="File" class="form-control" />
                     <span asp-validation-for="File" class="text-danger"></span>
                 </div>
 
-                <input asp-for="Language" class="form-control" value="arabic"  hidden/>
+                <input asp-for="Language" class="form-control" value="arabic" hidden />
 
-                <div class="mb-3 form-check">
-                    <input class="form-check-input" asp-for="IsApproved" value="False" disabled hidden />
-                </div>
+                <input class="form-check-input" asp-for="IsApproved" value="False" disabled hidden />
 
                 <input asp-for="UserId" class="form-control" value="@ViewBag.UserObjectJson" disabled hidden />
 
+                <div id="demandContainer">
+                    @for (int i = 0; i < Model.Demands.Count; i++)
+                    {
+                        <div class="mb-3">
+                            <label asp-for="@Model.Demands[i].DemandText" class="control-label">نص المطلب الاضافي للشكوى</label>
+                            <input asp-for="@Model.Demands[i].DemandText" class="form-control" />
+                            <span asp-validation-for="@Model.Demands[i].DemandText" class="text-danger"></span>
+                        </div>
+                    }
+                </div>
+
+
+                @*         <div id="demandTemplate" >
                 <div class="mb-3">
-                    <button type="submit" class="btn btn-primary w-100">تقديم</button>
+                <label class="control-label">Demand Text</label>
+                <input class="form-control" />
+                <span class="text-danger"></span>
+                </div>
+                </div> *@
+                <button type="button " class="btn btn-success mb-3" id="addDemandBtn">اضافة مطالب اضافية على الشكوى</button>
+
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary w-100 mt-5">ارسال الشكوى</button>
                 </div>
             </form>
         </div>
@@ -52,4 +73,17 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-}
+    <script>
+        var demandIndex = @Model.Demands.Count;
+        $("#addDemandBtn").click(function (e) {
+            e.preventDefault();
+            var demandTemplate = `<div class="mb-3">
+                                                                <label class="control-label">نص المطلب الاضافي للشكوى</label>
+                                                        <input name="Demands[${demandIndex}].DemandText"  class="form-control" />
+                                               <span class="text-danger"></span>
+                                                    </div>`;
+            $("#demandContainer").append(demandTemplate);
+            demandIndex++;
+        });
+    </script>
+                }
