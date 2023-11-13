@@ -16,10 +16,10 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] User user)
+    public async Task<IActionResult> Register(ViewData req)
     {
         // Check if the email is already registered
-        var existingUser = _context.Users.SingleOrDefault(u => u.Email == user.Email);
+        var existingUser = _context.Users.SingleOrDefault(u => u.Email == req.Users.Email);
         if (existingUser != null)
         {
             return Conflict(new { message = "Email already registered" });
@@ -27,19 +27,19 @@ public class AuthController : ControllerBase
 
         // using ASP.NET Core's built-in PasswordHasher
         var passwordHasher = new PasswordHasher<User>();
-        user.Password = passwordHasher.HashPassword(user, user.Password);
+        req.Users.Password = passwordHasher.HashPassword(req.Users, req.Users.Password);
 
-        _context.Users.Add(user);
+        _context.Users.Add(req.Users);
         await _context.SaveChangesAsync();
 
-        return Ok(new { message = "Registration successful", Id = user.Id,Email = user.Email,username=user.Username,phonenumber = user.PhoneNumber,role=user.Role });
+        return Ok(new { message = "Registration successful", Id = req.Users.Id,Email = req.Users.Email,username = req.Users.Username,phonenumber = req.Users.PhoneNumber,role=req.Users.Role });
     }
 
     [HttpPost("login")]
-    public IActionResult Login(UserLoginModel userLoginModel)
+    public IActionResult Login(ViewData req)
     {
         // Find the user by Email
-        var user = _context.Users.SingleOrDefault(u => u.Email == userLoginModel.Email);
+        var user = _context.Users.SingleOrDefault(u => u.Email == req.UserLoginModels.Email);
 
         // Check if the user exists
         if (user == null)
@@ -48,7 +48,7 @@ public class AuthController : ControllerBase
         }
 
         var passwordHasher = new PasswordHasher<User>();
-        var result = passwordHasher.VerifyHashedPassword(user, user.Password, userLoginModel.Password);
+        var result = passwordHasher.VerifyHashedPassword(user, user.Password, req.UserLoginModels.Password);
 
         if (result == PasswordVerificationResult.Failed)
         {

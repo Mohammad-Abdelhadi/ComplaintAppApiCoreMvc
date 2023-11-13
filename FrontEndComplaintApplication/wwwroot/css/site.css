@@ -14,5 +14,29 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-color: #e7e1ff;
+}
+.status-outline {
+    display: inline-block; /* Make the element inline-block to take the width of the content */
+    padding: 0.2em 0.5em; /* Adjust padding as needed for spacing */
+    border: 2px solid; /* Add an outline border */
+    border-color: #F4CA29;
+    border-radius: 10px; /* Optional: Add border-radius for rounded corners */
+    width: 100%;
+    text-align: center;
+    font-weight: 500;
+}
+
+.status-accepted {
+    color: #28a745; /* Green color for accepted status */
+    border-color: #28a745; /* Green border color for accepted status */
+}
+
+.status-rejected {
+    color: #dc3545; /* Red color for rejected status */
+    border-color: #dc3545; /* Red border color for rejected status */
+}
+tr , td {
+    text-align:center;
 }

@@ -4,7 +4,7 @@
 
 namespace BackEndComplaintApi.Migrations
 {
-    public partial class CreateTables : Migration
+    public partial class test : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,7 +17,7 @@ namespace BackEndComplaintApi.Migrations
                     ComplaintText = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Language = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsApproved = table.Column<bool>(type: "bit", nullable: false),
+                    IsApproved = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -62,20 +62,40 @@ namespace BackEndComplaintApi.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "Id", "Email", "Password", "PhoneNumber", "Role", "Username" },
-                values: new object[] { 1, "admin@admin.com", "AQAAAAEAACcQAAAAEL8U89xUCOuGL6ks1jsAK7LzI4vFNdeitQ04XqjXMfnMuJe8WSuRNqxfaBCowh3Xkg==", "0788888888", "admin", "admin" });
+            migrationBuilder.CreateTable(
+                name: "viewModel",
+                columns: table => new
+                {
+                    UsersId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.ForeignKey(
+                        name: "FK_viewModel_Users_UsersId",
+                        column: x => x.UsersId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Email", "Password", "PhoneNumber", "Role", "Username" },
-                values: new object[] { 2, "user@user.com", "AQAAAAEAACcQAAAAEC43xzUUpJUSfoLNYv3MKpfDH28KbCRBnHbHLcec1BIw2E73Vio6E7uNSQuiNAU7nA==", "0799999999", "user", "user" });
+                values: new object[] { 1, "admin@admin.com", "AQAAAAEAACcQAAAAEBEnktws5qpy7qi7YZ41c5Y22CuDkFes8mrDiFsaWvjqFAZ+59SsY/nTp781CWZhew==", "0788888888", "admin", "admin" });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Email", "Password", "PhoneNumber", "Role", "Username" },
+                values: new object[] { 2, "user@user.com", "AQAAAAEAACcQAAAAEBq+re9T8Fvzfh0d33mjLpGI1g5KFS0obSJCn5OdLzYTXFzz2O/eBe/d6E4mFCZwyQ==", "0799999999", "user", "user" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Demands_ComplaintId",
                 table: "Demands",
                 column: "ComplaintId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_viewModel_UsersId",
+                table: "viewModel",
+                column: "UsersId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -84,10 +104,13 @@ namespace BackEndComplaintApi.Migrations
                 name: "Demands");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "viewModel");
 
             migrationBuilder.DropTable(
                 name: "Complaints");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

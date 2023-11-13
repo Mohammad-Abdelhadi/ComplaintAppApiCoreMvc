@@ -1,0 +1,47 @@
+ [HttpPost("test")]
+ public async Task<IActionResult> Test([FromForm] Complaint imageModel)
+ {
+     if (imageModel.File != null && imageModel.File.Length > 0 && ModelState.IsValid)
+     {
+         try
+         {
+             // Save image to a specific directory within the project
+             string uploadDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
+             if (!Directory.Exists(uploadDirectory))
+             {
+                 Directory.CreateDirectory(uploadDirectory);
+             }
+
+             // Construct the file path
+             string fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageModel.File.FileName);
+             string filePath = Path.Combine(uploadDirectory, fileName);
+
+             // Save the file
+             using (var fileStream = new FileStream(filePath, FileMode.Create))
+             {
+                 await imageModel.File.CopyToAsync(fileStream).ConfigureAwait(false);
+             }
+
+             // Set the FileName property of the model to the file name
+             imageModel.FileName = fileName;
+
+             // Insert record
+             _context.Complaints.Add(imageModel);
+             await _context.SaveChangesAsync().ConfigureAwait(false);
+
+             // Return a success response if necessary
+             return Ok("Image uploaded successfully.");
+         }
+         catch (Exception ex)
+         {
+             // Handle exceptions (return a meaningful error response)
+             return StatusCode(500, $"Internal server error: {ex.Message}");
+         }
+     }
+
+     // Handle validation errors (file required and other model validations)
+     ModelState.AddModelError("File", "File is required.");
+     return BadRequest(ModelState);
+ }
+
+

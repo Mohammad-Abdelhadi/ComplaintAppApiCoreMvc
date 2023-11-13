@@ -18,8 +18,8 @@ namespace BackEndComplaintApi.Models
         [Required(ErrorMessage = "Language is required.")]
         public string Language { get; set; } // Should be either "Arabic" or "English"
 
-     
-        public bool IsApproved { get; set; }   // Indicates whether the complaint is approved by the administrator
+
+        public string IsApproved { get; set; } = "pending"; // Indicates whether the complaint is approved by the administrator
 
         [Required(ErrorMessage = "User ID is required.")]
         public int UserId { get; set; } // Foreign key to link with the User table

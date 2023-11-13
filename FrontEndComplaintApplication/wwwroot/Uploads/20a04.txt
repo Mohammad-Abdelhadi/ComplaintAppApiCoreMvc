@@ -1,0 +1,35 @@
+console.WriteLine("My Name Is Mohamamd ")
+int Mynum = Console.ReadLine()
+
+Console.WriteLine(Math.Round(2.6));
+Console.WriteLine(Math.Sqrt((64));
+
+Console.WriteLine(Math.Max(2,6));
+
+
+string firstname="John";
+string lastName="Doe";
+string name = string.Concat(firstname,lastName);
+Console.WriteLine(name);
+
+_________________
+
+string[]cars = { "Volvo","BMW","ForD","Mazda"};
+foreach(string i in cars)
+{
+console.writeLine(i)
+}
+_____________________
+create Function ->
+static void MyMethod(string fname)
+{
+Console.WriteLine("
+}
+
+class Car 
+{
+static void Main(string[] args)
+{
+Nameoftheclass nameoftheobject = new Nameoftheclass
+
+Console.WrtiLine

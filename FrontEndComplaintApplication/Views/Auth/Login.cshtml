@@ -1,48 +1,102 @@
-﻿@model FrontEndComplaintApplication.Models.UserLoginModel
+﻿@model FrontEndComplaintApplication.Models.ViewData
+
 
 @{
-    ViewData["Title"] = "Login";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = null;
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header bg-primary text-white text-center">
-                    <h3>Welcome Back To Our Webiste</h3>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="~/css/style.css">
+    <title>Login Page </title>
+</head>
+
+<body>
+
+    <div class="container" id="container">
+        <div class="form-container sign-up">
+            <form asp-action="Register" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <h1>Create Account</h1>
+                <div class="social-icons">
+                    <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
                 </div>
-                <div class="card-body">
-                    <form asp-action="Login">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="mb-3">
-                            <label asp-for="Email" class="form-label">Email</label>
-                            <input asp-for="Email" class="form-control" placeholder="Enter your email" value="admin@admin.com" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="Password" class="form-label">Password</label>
-                            <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" value="12345678"/>
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Login</button>
-                        </div>
-                    </form>
+                <span>or use your email for registeration</span>
+                <input type="text" asp-for="Users.Username" id="potatoform" placeholder="Name">
+
+                <input type="text" asp-for="Users.Email" id="potatoemail " placeholder="Email">
+                <span asp-validation-for="Users.Email" class="text-danger"></span>
+
+                <input asp-for="Users.PhoneNumber" class="form-control" placeholder="Enter your phone number" />
+                <span asp-validation-for="Users.PhoneNumber" class="text-danger"></span>
+
+                <input asp-for="Users.Password" type="password" class="form-control" placeholder="Enter your password" />
+                <span asp-validation-for="Users.Password" class="text-danger"></span>
+
+                <input asp-for="Users.ConfirmPassword" type="password" class="form-control" placeholder="Enter your password" />
+                <span asp-validation-for="Users.ConfirmPassword" class="text-danger"></span>
+
+
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+        <div class="form-container sign-in">
+            <form asp-action="Login">
+
+                <h1>Sign In</h1>
+                <div class="social-icons">
+                    <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+                <span>or use your email password</span>
+                <div asp-validation-summary="ModelOnly" class="text-danger" style="color"></div>
+
+                <input asp-for="UserLoginModels.Email" class="form-control" placeholder="Enter your email" value="admin@admin.com" />
+                <span asp-validation-for="UserLoginModels.Email" class="text-danger"></span>
+                <input asp-for="UserLoginModels.Password" type="password" class="form-control" placeholder="Enter your password" value="12345678" />
+                <span asp-validation-for="UserLoginModels.Password" class="text-danger"></span>
+                <a href="#">Forget Your Password?</a>
+                <button type="submit" asp-action="Login" asp-controller="Auth">Sign In</button>
+            </form>
+        </div>
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                    <h1>Welcome Back!</h1>
+                    <p>Enter your personal details to use all of site features</p>
+                    <button class="hidden" id="login">Sign In</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>Hello, Friend!</h1>
+                    <p>Register with your personal details to use all of site features</p>
+                    <button class="hidden" id="register">Sign Up</button>
                 </div>
             </div>
-           
         </div>
     </div>
 
-
-@* 
-    Hello world How aRe you 
-*@
-</div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+  
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+   
     }
-}
+
+    <script src="~/js/script.js"></script>
+
+</body>
+
+</html>
+

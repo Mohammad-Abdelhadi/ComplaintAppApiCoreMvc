@@ -77,19 +77,7 @@ namespace FrontEndComplaintApplication.Controllers
 
 
 
-        [HttpGet]
-        public IActionResult Register()
-        {
-            var userObjectJson = HttpContext.Session.GetString("UserObject");
-
-            // If the user is already logged in, redirect them to the index page
-            if (!string.IsNullOrEmpty(userObjectJson))
-            {
-                return RedirectToAction("Index", "auth"); // Assuming "Home" is your controller for the index page
-            }
-
-            return View();
-        }
+    
         public  IActionResult Create()
         {
             var userObjectJson = HttpContext.Session.GetString("UserObject");
@@ -235,7 +223,7 @@ namespace FrontEndComplaintApplication.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(User req)
+        public async Task<IActionResult> Register(ViewData req)
         {
             var userObjectJson = HttpContext.Session.GetString("UserObject");
 
@@ -261,7 +249,7 @@ namespace FrontEndComplaintApplication.Controllers
                     {
                         ModelState.AddModelError(string.Empty, "Registration failed. Please try again.");
 
-                        return View();
+                        return RedirectToAction("Login");
                     }
 
                 }
@@ -271,12 +259,18 @@ namespace FrontEndComplaintApplication.Controllers
                     ModelState.AddModelError(string.Empty, "An error occurred during registration.");
                 }
             }
-            return View();
+                        return RedirectToAction("Login");
         }
 
         public IActionResult Login()
         {
             var userObjectJson = HttpContext.Session.GetString("UserObject");
+            var viewModel = new ViewData
+            {
+                UserLoginModels = new UserLoginModel(),
+                Users = new User()
+            };
+
 
             // If the user is already logged in, redirect them to the index page
             if (!string.IsNullOrEmpty(userObjectJson))
@@ -284,14 +278,13 @@ namespace FrontEndComplaintApplication.Controllers
                 return RedirectToAction("Index"); // Assuming "Home" is your controller for the index page
             }
 
-            return View();
+            return View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(UserLoginModel req)
+        public async Task<IActionResult> Login(ViewData req)
         {
-            if (ModelState.IsValid)
-            {
+         
                 // Serialize the RegisterReq object to JSON
                 var jsonContent = new StringContent(JsonConvert.SerializeObject(req), Encoding.UTF8, "application/json");
                 // Send a POST request 
@@ -313,8 +306,6 @@ namespace FrontEndComplaintApplication.Controllers
                     ModelState.AddModelError(string.Empty, "Login failed. Please try again.");
                     return View();
                 }
-            }
-            return View();
         }
         public IActionResult Logout()
         {
@@ -347,7 +338,7 @@ namespace FrontEndComplaintApplication.Controllers
         }
 
 
-        public async Task<IActionResult> AcceptView(int id, bool isApproved)
+        public async Task<IActionResult> AcceptView(int id, string isApproved)
         {
             try
             {
@@ -355,7 +346,7 @@ namespace FrontEndComplaintApplication.Controllers
                 var json = JsonConvert.SerializeObject(data);
                 var jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = await _httpClient.PutAsync($"api/Complaint/EditComplaint/{id}?isApproved={true}", jsonContent);
+                HttpResponseMessage response = await _httpClient.PutAsync($"api/Complaint/EditComplaint/{id}?isApproved={"Accepted"}", jsonContent);
 
 
                 if (response.IsSuccessStatusCode)
@@ -373,15 +364,11 @@ namespace FrontEndComplaintApplication.Controllers
             }
         }
 
-        public async Task<IActionResult> Reject(int id, bool isApproved)
+        public async Task<IActionResult> Reject(int id, string isApproved)
         {
             try
             {
-                var data = new { IsApproved = isApproved };
-                var json = JsonConvert.SerializeObject(data);
-                var jsonContent = new StringContent(json, Encoding.UTF8, "application/json");
-
-                HttpResponseMessage response = await _httpClient.PutAsync($"api/Complaint/EditComplaint/{id}?isApproved={isApproved}", jsonContent);
+                HttpResponseMessage response = await _httpClient.PutAsync($"api/Complaint/EditComplaint/{id}?isApproved={"Rejected"}", null);
 
 
                 if (response.IsSuccessStatusCode)
@@ -399,6 +386,11 @@ namespace FrontEndComplaintApplication.Controllers
             }
         }
 
+     
+        public IActionResult Home ()
+        {
+            return View();
+        }
 
     }
 }

@@ -10,6 +10,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Complaint> Complaints { get; set; }
     public DbSet<Demand> Demands { get; set; }
     public DbSet<UserLoginModel> UserLoginModels { get; set; }
+    public DbSet<ViewData> viewModel { get; set; }
 
     // Other DbSet properties as needed
 
@@ -40,5 +41,7 @@ public class ApplicationDbContext : DbContext
                 Role = "user"
             }
         );
-    }
+        modelBuilder.Entity<ViewData>().HasNoKey();
+
+}
 }

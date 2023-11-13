@@ -76,7 +76,7 @@ namespace BackEndComplaintApi.Controllers
         }
 
         [HttpPut("EditComplaint/{id}")]
-        public async Task<IActionResult> AcceptView(int id, bool isApproved)
+        public async Task<IActionResult> AcceptView(int id, string isApproved)
         {
             var existingComplaint = await _context.Complaints.FindAsync(id);
             if (existingComplaint == null)
@@ -85,7 +85,7 @@ namespace BackEndComplaintApi.Controllers
             }
 
             // Check if the complaint is approved, and if it is, prevent editing
-            if (existingComplaint.IsApproved)
+            if (existingComplaint.IsApproved=="accepted")
             {
                 return BadRequest("Complaint is already approved and cannot be edited.");
             }
